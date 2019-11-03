@@ -1,11 +1,12 @@
 #include<vector>
-#include<utility>
+#include<utility> // for std::pair
 #include<unordered_map>
-#include<iostream>
 #include<deque>
 #include<string>
 #include<sstream>
 
+
+/// helper functions
 namespace Helpers
 {
 
@@ -13,9 +14,12 @@ namespace Helpers
   using Index2D = std::pair<int, int>;
   using Grid = std::vector<std::vector<int>>;
 
-  const int WALL = 1;
-  const int FREE = 0;
+  const int WALL = 1; /// grid value for a wall
+  const int FREE = 0; /// grid value for free space
 
+  /// converts Postion to string
+  ///
+  /// used for hashing positions in unordered_map
   std::string position_to_string(Position pos)
   {
     std::stringstream ss;
@@ -23,6 +27,7 @@ namespace Helpers
     return ss.str();
   }
 
+  /// returns all neighbouring positions
   std::vector<Position> get_neighbours(Position& pos_in, Grid& grid)
   {
     std::vector<Position> output{};
@@ -55,14 +60,16 @@ namespace Helpers
     std::deque<Position> queue;
 
     Position start_pos = std::make_pair(0, 0);
-    Position dest_pos = std::make_pair(grid.size() - 1, grid[0].size() - 1);
+    Position dest_pos = std::make_pair(grid.size() - 1, grid[0].size() - 1); // destination position
 
+    // make sure start and destination are not blocked
     if (!(grid[start_pos.first][start_pos.second] == WALL || grid[dest_pos.first][dest_pos.second] == WALL))
     {
-      visited[position_to_string(start_pos)] = 1; // mark start as visited
+      // mark start as visited and add to queue
+      visited[position_to_string(start_pos)] = 1; 
       queue.push_back(start_pos);
 
-      bool path_exists{ false };
+      bool path_exists{ false }; // flag set if path from start to destination exists
       while (!queue.empty())
       {
         Position cur_node_pos = queue.front();
@@ -72,6 +79,7 @@ namespace Helpers
           path_exists = true;
           break;
         }
+        // visit all unvisted neighbours
         for (auto neighbour_pos : Helpers::get_neighbours(cur_node_pos, grid))
         {
           if (visited.find(position_to_string(neighbour_pos)) == visited.end())
@@ -98,16 +106,17 @@ class Solution {
 public:
   int shortestPathBinaryMatrix(std::vector<std::vector<int>>& grid)
   {
-    using namespace Helpers;
-    return breadth_first_search(grid);
+    return Helpers::breadth_first_search(grid);
   }
 };
 
 
-int main()
-{
-  Solution sol;
-  std::vector<std::vector<int>> grid =
-  { {0, 0, 0},{1, 1, 0},{1, 1, 0} };
-  std::cout << sol.shortestPathBinaryMatrix(grid);
-}
+//#include<iostream>
+// Local Test Code
+//int main()
+//{
+//  Solution sol;
+//  std::vector<std::vector<int>> grid =
+//  { {0, 0, 0},{1, 1, 0},{1, 1, 0} };
+//  std::cout << sol.shortestPathBinaryMatrix(grid);
+//}
