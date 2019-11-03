@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DataStructures_ShortestPath.cpp">
+    <ClCompile Include="solution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
